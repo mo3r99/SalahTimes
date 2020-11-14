@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/textinput.css">
         <link href="css/icons.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/loading.css">
         
         <title>Prayer Times</title>
         
@@ -19,7 +20,7 @@
         <script src="js/locating.js"></script>
         <script src="js/main.js"></script>
     </head>
-    <body class="animate__animated animate__fadeIn" onload="initialise()">
+    <body onload="initialise()">
         <div class="container-grid">
             <nav>
                 <h1 class="">Salah Times</h1>
@@ -40,6 +41,10 @@
             </div>
             
             <main>
+                <div class="loading" id="loadingArea">
+                    <img src="assets/loading.gif" id="loadinggif" class="loadinggif">
+                </div>
+                
                 <div class="locationContainer">
                 <div class="location" id="locationGetArea">
                     <button id="location-get" onclick="getLocation()">
@@ -107,7 +112,7 @@
                 </div>
             </main>
             
-            <div class="container-content">
+            <!-- <div class="container-content">
                 <div class="content1">
                     <h1></h1>
                 </div>
@@ -117,10 +122,13 @@
                 <div class="content3">
                     <h1></h1>
                 </div>
-            </div>
+            </div> -->
             
             <div class="footer">
-                <p>Developed by Muhammad R</p>
+                <p>Developed by Muhammad R. <br>
+                    <img src="assets/github-32px.png" class="github-icon">
+                    <a href="https://github.com/mo3r99/SalahTimes">View on Github.</a>
+                </p>
             </div>
         </div>
     </body>

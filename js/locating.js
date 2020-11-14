@@ -1,27 +1,39 @@
+function loadingShow() {
+    document.getElementsByClassName("loading")[0].style.display = "flex";
+}
+
+function loadingHide() {
+    document.getElementById("loadingArea").style.display = "none";
+}
+
 function manualEntry() {
     document.getElementById("locationGetArea").style.display = "none";
     document.getElementById("entrypoint").style.display = "flex";
-    console.log("hello");
+    document.getElementById("locationHolderArea").style.display = "none";
 }
 
 function checkPostcode() {
-    var postcode = document.getElementById('name');
-    console.log(postcode.value);
-    console.log(postCodeCheck(postcode.value));
+    var postcode = document.getElementById('name'); //What the user has typed into the textbox
+    //console.log(postCodeCheck(postcode.value)); //Prints out whether the postcode the user typed is valid or not
     
-    if (postCodeCheck(postcode.value) != false) {
-        var formattedPostCode = postCodeCheck(postcode.value);
-        postCodeLocate(formattedPostCode);
-        document.getElementById('errorMsg').style.display = "none";
+    if (postCodeCheck(postcode.value) != false) {  //Check if postocode is valid
+        var formattedPostCode = postCodeCheck(postcode.value); //Gets formatted postcode to be used by maps api
+        
+        loadingShow();
+        postCodeLocate(formattedPostCode);  //Locates postcode using maps api
+        
+        document.getElementById("errorMsg").style.display = "none"; //Makes error message disappear underneath the textbox if visible
     } else {
-        document.getElementById('errorMsg').style.display = "flex";
+        document.getElementById("errorMsg").style.display = "flex"; //Informs user that the postcode is invalid
     }
 }
 
+//Hides textbox for inputting postcode
 function hideEntryPoint() {
-    document.getElementById("entrypoint").style.display = "none";
+    document.getElementById("entrypoint").style.display = "none"; 
 }
 
+//Validates postcode. Idk how this works.
 function postCodeCheck (toCheck) {
 
   // Permitted letters depend upon their position in the postcode.
@@ -98,16 +110,15 @@ function postCodeCheck (toCheck) {
   // Return with either the reformatted valid postcode or the original invalid postcode
   if (valid) {return postCode} else return false;
 }
+
 //Finding Location
 
 var latitude;
 var longitude;
 
-async function postCodeLocate(postcode) {
-    console.log(`locating postcode ` + postcode + `...`);
-    postcode = postcode.split(" ").join("+");
+function postCodeLocate(postcode) {
+    postcode = postcode.split(" ").join("+"); //Removes space from formatted postcode and adds a plus sign so it can be used with maps api
     
-    //postLatLng = fetch("https://maps.googleapis.com/maps/api/geocode/json?address=" + postcode + "&key=AIzaSyA73ProGB5nVAg5fyGocNScUUfGwo82GiE");
     var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + postcode + '&sensor=false&components=country:UK&key=AIzaSyA73ProGB5nVAg5fyGocNScUUfGwo82GiE';
 
     var latRequest = new XMLHttpRequest();
@@ -115,7 +126,7 @@ async function postCodeLocate(postcode) {
     latRequest.open("GET", url);
     latRequest.onload = function() {
         var latlng = JSON.parse(latRequest.responseText);
-        if (latlng.results[0].geometry.location.lat) {
+        if (latlng.results[0].geometry.location.lat) { //Checks if the results from maps api are valid
             latitude = latlng.results[0].geometry.location.lat;
             longitude = latlng.results[0].geometry.location.lng;
             codeAddress(latitude, longitude);
@@ -130,11 +141,14 @@ async function postCodeLocate(postcode) {
 }
 
 function getLocation() {
+    loadingShow();
+    document.getElementById("locationGetArea").style.display = "none";
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(savePosition, showError);
     } else { 
         document.getElementById("locationHolder").innerHTML = "Geolocation is not supported by this browser.";
         document.getElementById("locationHolderArea").style.display = "flex";
+        document.getElementById("locationGetArea").style.display = "grid";
     }
 }
 
@@ -142,8 +156,7 @@ function savePosition(position) {
     latitude = position.coords.latitude
     longitude = position.coords.longitude
     // document.getElementById("locationHolder").innerHTML = "Latitude: " + latitude + "<br>Longitude: " + longitude;
-    console.log(latitude)
-    console.log(longitude)
+    
     codeAddress(latitude, longitude);
     getTimes(latitude, longitude);
     
@@ -151,18 +164,23 @@ function savePosition(position) {
 }
 
 function showError(error) {
+    loadingHide();
+    document.getElementById("locationHolderArea").style.display = "flex";
+    document.getElementById("locationGetArea").style.display = "flex";
+    
+    var locationHolder = document.getElementById("locationHolder");
     switch(error.code) {
         case error.PERMISSION_DENIED:
-        document.getElementById("locationHolder").innerHTML = "User denied the request for Geolocation."
+        locationHolder.innerHTML = "Please enable location services or allow this page to use your location.";
         break;
     case error.POSITION_UNAVAILABLE:
-        document.getElementById("locationHolder").innerHTML = "Location information is unavailable."
+        locationHolder.innerHTML = "Location information is unavailable.";
         break;
     case error.TIMEOUT:
-        document.getElementById("locationHolder").innerHTML = "The request to get user location timed out."
+        locationHolder.innerHTML = "The request to get the location timed out.";
         break;
     case error.UNKNOWN_ERROR:
-        document.getElementById("locationHolder").innerHTML = "An unknown error occurred."
+        locationHolder.innerHTML = "An unknown error occurred.";
         break;
   }
 }
@@ -182,18 +200,13 @@ function initialise() {
     geocoder = new google.maps.Geocoder();
 }
 
-var geocoder;
-
 function codeAddress(lat, lng) {
     var latlng = new google.maps.LatLng(lat, lng);
     geocoder.geocode({'latLng': latlng}, function(results, status) {
         if(status == google.maps.GeocoderStatus.OK) {
-            console.log(results);
             if(results[1]) {
                 //formatted address
                 address = results[6].formatted_address;
-                //alert("address = " + address);
-                console.log(address);
                 updateLocationArea(address);
             } else {
                 alert("No results found");
@@ -216,16 +229,15 @@ function getTimes(lat, long) {
     var timestamp = Math.floor(Date.now() / 1000);
     url = "https://api.aladhan.com/v1/timings/" + timestamp + "?latitude=" + lat + "&longitude=" + long + "&method=2&tune=0,1,0,5,33,3,0,0";
     // Tune order Imsak,Fajr,Sunrise,Dhuhr,Asr,Maghrib,Sunset,Isha,Midnight
-    console.log(url);
     
     var timeRequest = new XMLHttpRequest();
     timeRequest.open("GET", url);
     timeRequest.onload = function() {
         var times = JSON.parse(timeRequest.responseText);
-        console.log(times.data.timings);
         timePopulate(times.data.timings);
     };
     timeRequest.send();
+    loadingHide();
 }
 
 function timePopulate(timings) {
