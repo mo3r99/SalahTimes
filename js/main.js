@@ -14,7 +14,7 @@ function toggleBar(x) {
         open = true; //The navigation is now open.
 
         
-        setTimeout(function () { //A 500ms delay to remove the animate classes that were added.
+        setTimeout(() => { //A 500ms delay to remove the animate classes that were added.
             menu.classList.remove("animate__animated");
             menu.classList.remove("animate__fadeIn");
             menu.classList.remove("animate__faster");
@@ -26,7 +26,7 @@ function toggleBar(x) {
         
         open = false; //They're now gone so count is back to 0
         
-        setTimeout(function () { //Add the none class and remove the animation classes after a delay to ensure smoothness.
+        setTimeout(() => { //Add the none class and remove the animation classes after a delay to ensure smoothness.
             menu.classList.add("none");
             menu.classList.remove("animate__animated");
             menu.classList.remove("animate__fadeOut");
@@ -35,4 +35,8 @@ function toggleBar(x) {
     }
     
     //console.log(open); //For debugging
+}
+
+function showDropdown() {
+    document.getElementById("dropdown").style.display = "block";
 }

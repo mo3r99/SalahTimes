@@ -24,7 +24,7 @@
 }
 
 .entryButton:hover {
-    background-color: #38ef7d;
+    background-color: #6DA34D;
     color: black;
 }
 
@@ -33,7 +33,11 @@
 }
 
 .entryButton:active {
-    background-color: #11998e;
+    background-color: #EFF1ED;
+}
+
+.entryButton:active .material-icons {
+    color: black;
 }
 
 .entryButton .material-icons {
@@ -92,7 +96,7 @@
   padding-bottom: 6px;
   font-weight: 700;
   border-width: 3px;
-  border-image: linear-gradient(to right, #11998e, #38ef7d);
+  border-image: linear-gradient(to right, #6DA34D, #6DA34D);
   border-image-slice: 1;
 }
 .form__field:focus ~ .form__label {
@@ -101,7 +105,7 @@
   display: block;
   transition: 0.1s;
   font-size: 1rem;
-  color: #11998e;
+  color: #6DA34D;
   font-weight: 700;
 }
 

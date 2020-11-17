@@ -287,7 +287,7 @@ main {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 0.2fr 1fr;
     grid-template-areas: 
-        "start-title start-title"
+        "start-title j-dropdown"
         "start-times start-times";
     background-color: white;
     color: black;
@@ -302,6 +302,78 @@ main {
     font-size: 20px;
     font-weight: 100;
     margin: 0.5em 0;
+}
+
+.title-container {
+    display: flex;
+}
+
+.j-dropdown {
+    grid-area: j-dropdown;
+    padding: 0.6em 0 0 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    width: 100%;
+    position: relative;
+    bottom: 0.2em;
+}
+
+.dropdown-button {
+    background-color: #23395B;
+    color: white;
+    margin: 0 0.5em 0 0;
+    padding: 0.4em 0.5em 0.3em 1em;
+    float: left;
+    font-size: 15px;
+    font-weight: 300;
+    text-align: left;
+    width: 100%;
+    text-decoration: none;
+    border-radius: 7px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.dropdown-button span {
+    /*margin: 0.2em 0 0 0.3em;*/
+    float: right;
+    position: absolute;
+    right: 1em;
+}
+
+.j-dropdown:hover .j-dropdown-list {
+    display: block;
+}
+
+.j-dropdown-list {
+    display: none;
+    position: absolute;
+    margin: 2.6em 0 0 0;
+    float: right;
+    background-color: #406E8E;
+    color: white;
+    list-style: none;
+    font-size: 13px;
+    padding: 0;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    min-width: 98%;
+}
+
+.j-dropdown-list li {
+    padding: 1em;
+    cursor: pointer;s
+}
+
+.j-dropdown-list li:hover {
+    background-color: #EFF1ED;
+    color: black;
+}
+
+.j-dropdown-list li:active {
+    background-color: #6DA34D;
+    color: white;
 }
 
 .jamat-times {
@@ -325,31 +397,6 @@ main {
     margin: 0.3em 0;
     font-weight: 400;
     font-family: 'Open Sans', sans-serif;
-}
-
-
-
-.container-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr;
-    grid-template-areas: "content1 content2 content3";
-    width: 100vw;
-}
-
-.content1 {
-    /* background-color: #e9c46a; */
-    grid-area: content1;
-}
-
-.content2 {
-    /* background-color: #f4a261; */
-    grid-area: content2;
-}
-
-.content3 {
-    /* background-color: #e76f51; */
-    grid-area: content3;
 }
 
 .footer {
@@ -381,6 +428,17 @@ main {
     padding: 0 3px 0 0;
 }
 
+@media only screen and (max-width: 1000px) {
+    .dropdown-button {
+        font-size: 13px;
+        margin: 0;
+    }
+    
+    .dropdown-button span {
+        display: none;
+    }
+}
+
 @media only screen and (max-width: 550px) {
     .container-grid {
         height: 120vh;
@@ -408,5 +466,18 @@ main {
     
     .j-container {
         margin: 1em 0;
+    }
+    
+    .dropdown-button {
+        font-size: 12px;
+        margin: 0;
+    }
+    
+    .dropdown-button span {
+        display: block;
+    }
+    
+    .j-dropdown-list {
+        min-width: 98%;
     }
 }

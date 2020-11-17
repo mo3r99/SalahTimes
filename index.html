@@ -89,6 +89,16 @@
                     </div>
                     <div class="j-container">
                         <h2 class="j-title">Jamaat Times:</h2>
+                    
+                        <div class="j-dropdown">
+                            <a href="#" class="dropdown-button" onclick="showDropdown()">Select a Mosque:<span class="material-icons">keyboard_arrow_down</span></a>
+                        
+                            <ul class="j-dropdown-list" id="dropdown">
+                                <li>Masjid-e-Noor</li>
+                                <li>Central Mosque</li>
+                            </ul>
+                        </div>                        
+
                         <div class="jamat-times">
                             <div class="jamat-titles">
                                 <p>Fajr:</p>
@@ -98,7 +108,7 @@
                                 <p>Isha:</p>
                             </div>
                             <div class="j-times">
-                                <p id="j-fajr">This service is unavailable in your region.</p>
+                                <p id="j-fajr">05:00</p>
                                 <p id="j-zuhr">12:15</p>
                                 <p id="j-asr">3:00</p>
                                 <p id="j-maghrib">4:15</p>
