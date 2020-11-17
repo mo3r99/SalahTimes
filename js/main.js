@@ -40,3 +40,13 @@ function toggleBar(x) {
 function showDropdown() {
     document.getElementById("dropdown").style.display = "block";
 }
+
+function hideDropdown() {
+    document.getElementById("dropdown").style.display = "none";
+}
+
+//document.addEventListener("click", () => {
+//    if (document.getElementById("dropdown").style.display = "block") {
+//        document.getElementById("dropdown").style.display = "none";
+//    }
+//});

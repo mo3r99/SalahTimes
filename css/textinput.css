@@ -87,7 +87,7 @@
   position: absolute;
   top: 0;
   display: block;
-  transition: 0.1s;
+  transition: 0.2s;
   font-size: 1rem;
   color: #fff;
 }
@@ -99,6 +99,7 @@
   border-image: linear-gradient(to right, #6DA34D, #6DA34D);
   border-image-slice: 1;
 }
+
 .form__field:focus ~ .form__label {
   position: absolute;
   top: 0;
