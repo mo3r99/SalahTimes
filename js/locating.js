@@ -14,7 +14,6 @@ function manualEntry() {
 
 function checkPostcode() {
     var postcode = document.getElementById('name'); //What the user has typed into the textbox
-    //console.log(postCodeCheck(postcode.value)); //Prints out whether the postcode the user typed is valid or not
     
     if (postCodeCheck(postcode.value) != false) {  //Check if postocode is valid
         var formattedPostCode = postCodeCheck(postcode.value); //Gets formatted postcode to be used by maps api
@@ -113,31 +112,27 @@ function postCodeCheck (toCheck) {
 
 //Finding Location
 
-var latitude;
-var longitude;
-
 function postCodeLocate(postcode) {
-    postcode = postcode.split(" ").join("+"); //Removes space from formatted postcode and adds a plus sign so it can be used with maps api
+    postcode = postcode.split(" ").join("");
     
-    var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + postcode + '&sensor=false&components=country:UK&key=AIzaSyA73ProGB5nVAg5fyGocNScUUfGwo82GiE';
-
-    var latRequest = new XMLHttpRequest();
+    var url = `https://api.postcodes.io/postcodes/${postcode}`;
     
-    latRequest.open("GET", url);
-    latRequest.onload = function() {
-        var latlng = JSON.parse(latRequest.responseText);
-        if (latlng.results[0].geometry.location.lat) { //Checks if the results from maps api are valid
-            latitude = latlng.results[0].geometry.location.lat;
-            longitude = latlng.results[0].geometry.location.lng;
-            codeAddress(latitude, longitude);
-            getTimes(latitude, longitude);
+    var postCodeData = new XMLHttpRequest;
+    postCodeData.open("GET", url);
+    postCodeData.onload = () => {
+        var PCResponse = JSON.parse(postCodeData.responseText);
+        
+        if (PCResponse.status == 200){
+            updateLocationArea(PCResponse.result.admin_district);
+            getTimes(PCResponse.result.latitude, PCResponse.result.longitude);
             hideLocation();
-            hideEntryPoint();
+            hideEntryPoint(); 
+            
         } else {
-            console.log("Error.");
+            console.log("Error while getting the postcode location.");
         }
-    };
-    latRequest.send();
+    }
+    postCodeData.send();
 }
 
 function getLocation() {
@@ -153,10 +148,9 @@ function getLocation() {
 }
 
 function savePosition(position) {
-    latitude = position.coords.latitude
-    longitude = position.coords.longitude
-    // document.getElementById("locationHolder").innerHTML = "Latitude: " + latitude + "<br>Longitude: " + longitude;
-    
+    var latitude = position.coords.latitude
+    var longitude = position.coords.longitude
+        
     codeAddress(latitude, longitude);
     getTimes(latitude, longitude);
     
@@ -193,28 +187,23 @@ function hideLocation() {
 
 //Turn the location into a city:
 
-var geocoder; //A global geocoder object
-var address;
-
-function initialise() {
-    geocoder = new google.maps.Geocoder();
-}
-
 function codeAddress(lat, lng) {
-    var latlng = new google.maps.LatLng(lat, lng);
-    geocoder.geocode({'latLng': latlng}, function(results, status) {
-        if(status == google.maps.GeocoderStatus.OK) {
-            if(results[1]) {
-                //formatted address
-                address = results[6].formatted_address;
-                updateLocationArea(address);
-            } else {
-                alert("No results found");
-             }
+    var url = `https://api.postcodes.io/postcodes?lon=${lng}&lat=${lat}`;
+    
+    var addressResponse = new XMLHttpRequest;
+    
+    addressResponse.open("GET", url);
+    addressResponse.onload = () => {
+        var responseJSON = JSON.parse(addressResponse.responseText);
+        
+        if (responseJSON.status === 200) {
+            updateLocationArea(responseJSON.result[0].admin_district);
         } else {
-            alert("Geocoder failed due to: " + status);
+            console.log("Error while finding the city.");
         }
-    });
+    }
+    
+    addressResponse.send();
 }
 
 function updateLocationArea(address) {
@@ -223,16 +212,14 @@ function updateLocationArea(address) {
 
 //Use Salah Times API to get times:
 
-var url; 
-
 function getTimes(lat, long) {
     var timestamp = Math.floor(Date.now() / 1000);
-    url = "https://api.aladhan.com/v1/timings/" + timestamp + "?latitude=" + lat + "&longitude=" + long + "&method=2&tune=0,1,0,5,33,3,0,0";
+    var url = `https://api.aladhan.com/v1/timings/${timestamp}?latitude=${lat}&longitude=${long}&method=2&tune=0,1,0,5,33,3,0,0`;
     // Tune order Imsak,Fajr,Sunrise,Dhuhr,Asr,Maghrib,Sunset,Isha,Midnight
     
     var timeRequest = new XMLHttpRequest();
     timeRequest.open("GET", url);
-    timeRequest.onload = function() {
+    timeRequest.onload = () => {
         var times = JSON.parse(timeRequest.responseText);
         timePopulate(times.data.timings);
     };
