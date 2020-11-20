@@ -233,4 +233,6 @@ function timePopulate(timings) {
     document.getElementById("asr").innerHTML = timings.Asr;
     document.getElementById("maghrib").innerHTML = timings.Maghrib;
     document.getElementById("isha").innerHTML = timings.Isha;
+
+    bodyColourChange();
 }
